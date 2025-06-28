@@ -41,15 +41,15 @@
       }
     }
 
-    textarea {
+    textarea, input {
       width: 80%;
-      height: 100px;
       padding: 10px;
       border: none;
       border-radius: 5px;
       background-color: var(--card-color);
       color: var(--text-color);
       resize: none;
+      margin-top: 10px;
     }
 
     button {
@@ -95,6 +95,21 @@
       font-size: 0.9rem;
     }
 
+    .fancy-text {
+      margin: 0.4rem auto;
+      padding: 0.5rem;
+      width: 80%;
+      background-color: var(--card-color);
+      border-radius: 4px;
+      color: var(--accent-color);
+      cursor: pointer;
+    }
+
+    .fancy-text:hover {
+      background-color: var(--accent-hover);
+      color: white;
+    }
+
     footer {
       margin-top: 2rem;
       font-size: 0.9rem;
@@ -118,9 +133,20 @@
   <div id="loader">🔄 Processing...</div>
   <div id="output"></div>
 
+  <hr style="margin: 2rem 0;" />
+
+  <h2>✒️ Unicode Font Changer</h2>
+  <input type="text" id="unicodeInput" placeholder="Enter your text..." />
+  <div id="fontResults"></div>
+
+  <footer>
+    Developed by <strong>Ransara Devnath</strong> © 2025
+  </footer>
+
   <script>
     const input = document.getElementById('textInput');
     const charCount = document.getElementById('charCount');
+
     input.addEventListener('input', () => {
       charCount.innerText = 'Characters: ' + input.value.length;
     });
@@ -186,10 +212,34 @@
     function hideLoader() {
       document.getElementById('loader').style.display = 'none';
     }
-  </script>
 
-  <footer>
-    Developed by <strong>Ransara Devnath</strong> © 2025
-  </footer>
+    // Unicode Font Changer Logic
+    document.getElementById('unicodeInput').addEventListener('input', function () {
+      const text = this.value;
+      const results = document.getElementById('fontResults');
+      results.innerHTML = '';
+
+      const styles = [
+        t => [...t].map(c => c.match(/[A-Za-z]/) ? String.fromCharCode(0x1D400 + c.toUpperCase().charCodeAt(0) - 65) : c).join(''),
+        t => [...t].map(c => c.match(/[a-z]/) ? String.fromCharCode(0x1D41A + c.charCodeAt(0) - 97) : c).join(''),
+        t => t.toUpperCase().split('').map(l => l.match(/[A-Z]/) ? String.fromCharCode(0x24B6 + (l.charCodeAt(0) - 65)) : l).join(''),
+        t => t.split('').reverse().join('')
+      ];
+
+      styles.forEach(format => {
+        try {
+          const fancy = format(text);
+          const div = document.createElement('div');
+          div.className = 'fancy-text';
+          div.innerText = fancy;
+          div.onclick = () => {
+            navigator.clipboard.writeText(fancy);
+            alert("📋 Copied to clipboard!");
+          };
+          results.appendChild(div);
+        } catch {}
+      });
+    });
+  </script>
 </body>
 </html>
