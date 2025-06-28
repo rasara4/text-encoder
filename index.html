@@ -90,6 +90,7 @@
   <br />
   <button onclick="encryptText()">Encrypt</button>
   <button onclick="decryptText()">Decrypt</button>
+  <button onclick="copyText()">Copy</button>
 
   <div id="output"></div>
 
@@ -108,6 +109,21 @@
       } catch (e) {
         document.getElementById('output').innerText = "⚠️ Invalid Base64 string!";
       }
+    }
+
+    function copyText() {
+      const output = document.getElementById('output').innerText;
+      if (!output) {
+        alert("There's no text to copy!");
+        return;
+      }
+      const temp = document.createElement("textarea");
+      temp.value = output;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      document.body.removeChild(temp);
+      alert("✅ Text copied to clipboard!");
     }
   </script>
 
