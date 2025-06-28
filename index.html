@@ -26,7 +26,7 @@
 
     .welcome-text {
       font-size: 1.4rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       animation: glowLoop 4s ease-in-out infinite;
       color: var(--accent-color);
       text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
@@ -53,8 +53,8 @@
     }
 
     button {
-      margin: 1rem 0.5rem;
-      padding: 10px 20px;
+      margin: 1rem 0.4rem;
+      padding: 10px 18px;
       background-color: var(--accent-color);
       color: white;
       border: none;
@@ -75,6 +75,26 @@
       word-break: break-word;
     }
 
+    #loader {
+      display: none;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: var(--accent-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+
+    #charCount {
+      margin-top: 0.4rem;
+      color: #bbb;
+      font-size: 0.9rem;
+    }
+
     footer {
       margin-top: 2rem;
       font-size: 0.9rem;
@@ -87,28 +107,53 @@
   <h2 class="welcome-text">👋 Welcome to Secure Text Converter</h2>
 
   <textarea id="textInput" placeholder="Type or paste your message..."></textarea>
+  <div id="charCount">Characters: 0</div>
+
   <br />
   <button onclick="encryptText()">Encrypt</button>
   <button onclick="decryptText()">Decrypt</button>
   <button onclick="copyText()">Copy</button>
+  <button onclick="clearFields()">Clear</button>
 
+  <div id="loader">🔄 Processing...</div>
   <div id="output"></div>
 
   <script>
+    const input = document.getElementById('textInput');
+    const charCount = document.getElementById('charCount');
+    input.addEventListener('input', () => {
+      charCount.innerText = 'Characters: ' + input.value.length;
+    });
+
+    document.getElementById("output").onclick = function () {
+      const range = document.createRange();
+      range.selectNode(this);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    };
+
     function encryptText() {
-      const text = document.getElementById('textInput').value;
-      const encrypted = btoa(text); // Base64 Encode
-      document.getElementById('output').innerText = "🔒 Encrypted: " + encrypted;
+      const text = input.value;
+      showLoader();
+      setTimeout(() => {
+        const encrypted = btoa(text);
+        document.getElementById('output').innerText = "🔒 Encrypted: " + encrypted;
+        hideLoader();
+      }, 1000);
     }
 
     function decryptText() {
-      try {
-        const encrypted = document.getElementById('textInput').value;
-        const decrypted = atob(encrypted); // Base64 Decode
-        document.getElementById('output').innerText = "🔓 Decrypted: " + decrypted;
-      } catch (e) {
-        document.getElementById('output').innerText = "⚠️ Invalid Base64 string!";
-      }
+      const encrypted = input.value;
+      showLoader();
+      setTimeout(() => {
+        try {
+          const decrypted = atob(encrypted);
+          document.getElementById('output').innerText = "🔓 Decrypted: " + decrypted;
+        } catch (e) {
+          document.getElementById('output').innerText = "⚠️ Invalid Base64 string!";
+        }
+        hideLoader();
+      }, 1000);
     }
 
     function copyText() {
@@ -124,6 +169,22 @@
       document.execCommand("copy");
       document.body.removeChild(temp);
       alert("✅ Text copied to clipboard!");
+    }
+
+    function clearFields() {
+      input.value = '';
+      document.getElementById('output').innerText = '';
+      charCount.innerText = 'Characters: 0';
+      hideLoader();
+    }
+
+    function showLoader() {
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('output').innerText = '';
+    }
+
+    function hideLoader() {
+      document.getElementById('loader').style.display = 'none';
     }
   </script>
 
