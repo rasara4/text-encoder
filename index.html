@@ -4,16 +4,41 @@
   <meta charset="UTF-8" />
   <title>Secure Text Site</title>
   <style>
+    :root {
+      --bg-color: #121212;
+      --card-color: #1e1e1e;
+      --text-color: #ffffff;
+      --accent-color: #00c9a7;
+      --accent-hover: #00a388;
+    }
+
     body {
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: white;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: 'Segoe UI', sans-serif;
       padding: 2rem;
       text-align: center;
     }
 
     h1 {
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-text {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      animation: glowLoop 4s ease-in-out infinite;
+      color: var(--accent-color);
+      text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+    }
+
+    @keyframes glowLoop {
+      0%, 100% {
+        text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+      }
+      50% {
+        text-shadow: 0 0 10px #00fff0, 0 0 20px #00fff0, 0 0 30px #00fff0;
+      }
     }
 
     textarea {
@@ -22,13 +47,15 @@
       padding: 10px;
       border: none;
       border-radius: 5px;
+      background-color: var(--card-color);
+      color: var(--text-color);
       resize: none;
     }
 
     button {
       margin: 1rem 0.5rem;
       padding: 10px 20px;
-      background-color: #00c9a7;
+      background-color: var(--accent-color);
       color: white;
       border: none;
       border-radius: 4px;
@@ -37,24 +64,33 @@
     }
 
     button:hover {
-      background-color: #00a388;
+      background-color: var(--accent-hover);
     }
 
     #output {
       margin-top: 1rem;
       padding: 1rem;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--card-color);
       border-radius: 5px;
       word-break: break-word;
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
   <h1>🔐 Secure Text Converter</h1>
+  <h2 class="welcome-text">👋 Welcome to Secure Text Converter</h2>
+
   <textarea id="textInput" placeholder="Type or paste your message..."></textarea>
   <br />
   <button onclick="encryptText()">Encrypt</button>
   <button onclick="decryptText()">Decrypt</button>
+
   <div id="output"></div>
 
   <script>
@@ -74,5 +110,9 @@
       }
     }
   </script>
+
+  <footer>
+    Developed by <strong>Ransara Devnath</strong> © 2025
+  </footer>
 </body>
 </html>
